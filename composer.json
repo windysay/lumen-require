@@ -22,7 +22,7 @@
       "Yunhan\\": "src/"
     },
     "files": [
-      "src/helper.php"
+      "src/helpers.php"
     ]
   },
   "config": {
