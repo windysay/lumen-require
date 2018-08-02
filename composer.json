@@ -1,0 +1,30 @@
+{
+  "name": "yunhanphp/lumen-require",
+  "description": "Lumen 生产环境集成",
+  "keywords": [
+    "laravel",
+    "lumen"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "raygu0101",
+      "email": "raygu0101@gmail.com"
+    }
+  ],
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Yunhan\\": "src/"
+    },
+    "files": [
+      "src/helper.php"
+    ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
+}
