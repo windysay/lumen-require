@@ -1,5 +1,13 @@
 # Lumen 生产环境集成
 
+## todo
+- [ ] 集成 `php-libs`
+- [ ] 集成 `ErrorHandler`
+- [ ] 集成 `Auth`
+- [ ] 集成 `rbac`
+- [ ] 集成 `Oss`
+- [ ] 规范化目录结构
+
 ## 类库
 - helper.php：laravel公共方法（自动加载）
     - config_path
