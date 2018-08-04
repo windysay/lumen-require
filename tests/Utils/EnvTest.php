@@ -14,18 +14,18 @@ class EnvTest extends BaseTestCase
         Env::clearCache();
     }
 
-    public function testIsProdFalse()
+    public function testIsDevFalse()
     {
-        $this->assertFalse(Env::isProd());
+        $this->assertFalse(Env::isDev());
     }
 
-    public function testIsProdTrue()
+    public function testIsDevTrue()
     {
-        putenv('APP_ENV=production');
-        $this->assertTrue(Env::isProd());
+        putenv('APP_ENV=local');
+        $this->assertTrue(Env::isDev());
 
         // 测试缓存
         putenv('APP_ENV=testing');
-        $this->assertTrue(Env::isProd());
+        $this->assertTrue(Env::isDev());
     }
 }

@@ -9,23 +9,40 @@ class Env
      */
     private static $cache = [];
 
-    /**
-     * 是否生产环境
-     * @return bool
-     */
+    public static function isDev()
+    {
+        return self::checkEnv(__FUNCTION__, ['dev', 'local']);
+    }
+
+    public static function isDevOrTest()
+    {
+        return self::checkEnv(__FUNCTION__, ['dev', 'local', 'test']);
+    }
+
     public static function isProd()
     {
-        if (!isset(self::$cache['isProd'])) {
-            self::$cache['isProd'] = app()->environment('production');
+        return self::checkEnv(__FUNCTION__, ['production', 'staging']);
+    }
+
+    /**
+     * 内部封装方法
+     * @param string       $name
+     * @param array|string $env
+     * @return bool
+     */
+    private static function checkEnv($name, $env): bool
+    {
+        if (!isset(self::$cache[$name])) {
+            self::$cache[$name] = app()->environment($env);
         }
-        return self::$cache['isProd'];
+        return self::$cache[$name];
     }
 
     /**
      * 清空缓存
      * @return void
      */
-    public static function clearCache()
+    public static function clearCache(): void
     {
         self::$cache = [];
     }

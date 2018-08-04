@@ -8,6 +8,11 @@
     - cache
     - request
     - logger
+- 常用工具 Utils
+    - Env 判断环境变量
+        - isDev: 判断是否 `dev` `local`
+        - isDevOrTest: 判断是否 `dev` `local` `test`
+        - isProd: 判断是否 `production` `staging`
 
 ## 集成模块
 - guzzlehttp/guzzle：用于发起外部请求
