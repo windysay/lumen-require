@@ -73,6 +73,7 @@ if (!function_exists('cache')) {
         return app('cache')->put(key($arguments[0]), reset($arguments[0]), $arguments[1]);
     }
 }
+
 if (!function_exists('request')) {
     /**
      * Get an instance of the current request or an input item from the request.
@@ -93,6 +94,7 @@ if (!function_exists('request')) {
         return data_get(app('request')->all(), $key, $default);
     }
 }
+
 if (!function_exists('logger')) {
     /**
      * Log a debug message to the logs.
@@ -107,5 +109,17 @@ if (!function_exists('logger')) {
         }
 
         return app('log')->debug($message, $context);
+    }
+}
+
+if (!function_exists('resolve')) {
+    /**
+     * Resolve a service from the container.
+     * @param  string $name
+     * @return mixed
+     */
+    function resolve($name)
+    {
+        return app($name);
     }
 }
