@@ -14,6 +14,11 @@ class Env
         return self::checkEnv(__FUNCTION__, ['dev', 'local']);
     }
 
+    public static function isTest()
+    {
+        return self::checkEnv(__FUNCTION__, ['test']);
+    }
+
     public static function isDevOrTest()
     {
         return self::checkEnv(__FUNCTION__, ['dev', 'local', 'test']);
