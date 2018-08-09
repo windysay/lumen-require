@@ -19,7 +19,7 @@ JAuth/config/auth.php 到 /config
     $app->configure('auth');
     
     //注册服务
-    $app->register(JMD\Auth\AuthServiceProvider::class);
+    $app->register(Yunhan\JAuth\AuthServiceProvider::class);
 
 **3、表迁移**             
 复制      
@@ -43,7 +43,7 @@ model例：
     namespace App;
     
     use Illuminate\Auth\Authenticatable;
-    use JMD\Auth\Traits\JAuthTrait;
+    use Yunhan\JAuth\Traits\JAuthTrait;
     use Laravel\Lumen\Auth\Authorizable;
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -107,7 +107,7 @@ bootstrap/app.php 中添加路由中间件
 
     $router->get('login', 'Controller@login');
 
-    use JMD\Auth\Auth;
+    use Yunhan\JAuth\Auth;
 
     public function login()
     {
@@ -127,7 +127,7 @@ bootstrap/app.php 中添加路由中间件
     ]);
     
     
-    use JMD\Auth\Auth;
+    use Yunhan\JAuth\Auth;
     
     public function logout()
     {
@@ -141,6 +141,8 @@ bootstrap/app.php 中添加路由中间件
         'middleware' => 'JAuth:user,1',
         'uses' => 'Controller@selfInfo'
     ]);
+    
+    use Yunhan\JAuth\Auth;
     
     public function selfInfo()
     {
