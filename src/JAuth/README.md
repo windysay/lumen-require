@@ -103,6 +103,7 @@ bootstrap/app.php 中添加路由中间件
 填充user数据        
 //php artisan db:seed
 
+
 登录
 
     $router->get('login', 'Controller@login');
