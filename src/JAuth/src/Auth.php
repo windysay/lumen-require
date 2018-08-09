@@ -48,4 +48,12 @@ class Auth
     {
         return LAuth::id();
     }
+
+    // JAuthinterface get set del get set del
+    // JAuth cache token error jauth []
+    // jauth.php return [ 'token' => null, 'cache' => 'db' =>model 'cache', 'reids'],
+    // cache [ dbCache[ model get set del] redisCache[redis ] facadeCache [cache] ]
+    // token [ get ]
+    // Auth login v logout re  [cache token] Auth;;JAuth()->login()
+
 }
