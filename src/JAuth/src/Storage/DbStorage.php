@@ -20,23 +20,23 @@ class DbStorage implements StorageInterface
         return new Ticket();
     }
 
-    public function set($uid)
+    public function set($uid, $guard)
     {
         $token = AuthUtil::generateUUID($uid);
-        return $this->getTicket()->add($token, $uid);
+        return $this->getTicket()->add($uid, $token, $guard);
     }
 
-    public function get($token)
+    public function get($token, $guard)
     {
-        $ticket = $this->getTicket()->get($token);
+        $ticket = $this->getTicket()->get($token, $guard);
         if (empty($ticket)) {
             return null;
         }
         return $ticket->expiration > AuthUtil::currentTime() ? $ticket->uid : null;
     }
 
-    public function del($token)
+    public function del($token, $guard)
     {
-        return $this->getTicket()->del($token);
+        return $this->getTicket()->del($token, $guard);
     }
 }

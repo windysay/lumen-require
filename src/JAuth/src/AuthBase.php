@@ -21,18 +21,13 @@ class AuthBase
     public static function getUserByToken($token)
     {
         $storage = new StorageEntity();
-        $uid = $storage->getStorage()->get($token);
+        $guard = AuthUtil::getCurrentGuard();
+        $uid = $storage->getStorage()->get($token, $guard);
         if (empty($uid)) {
             throw new SignatureTokenException('无效 TOKEN');
         }
         $userModel = AuthUtil::getUserModel();
         $user = (new $userModel)->getUserByIdToJAuth($uid);
         return $user;
-    }
-
-    public static function guardNameIsValid($guard)
-    {
-        $arr = AuthUtil::getGuardConfig();
-        return array_key_exists($guard, $arr);
     }
 }

@@ -31,11 +31,12 @@ class Ticket extends Model
         $this->setTable(AuthUtil::getTicketTableName());
     }
 
-    public function add($token, $uid)
+    public function add($uid, $token, $guard)
     {
         $add = [
             'uid' => $uid,
             'token' => $token,
+            'guard' => $guard,
             'status' => 0,
             'ip' => AuthUtil::request()->ip() ?: '',
             'expiration' => AuthUtil::currentTime() + (int)AuthUtil::getTokenExpiration(),
@@ -44,16 +45,21 @@ class Ticket extends Model
         return $res ? $token : false;
     }
 
-    public function del($token)
+    public function del($token, $guard)
     {
-        return static::where(['token' => $token])->update(['status' => $this->status_del]) > 0;
+        return static::where([
+                'token' => $token,
+                'guard' => $guard
+            ])
+            ->update(['status' => $this->status_del]) > 0;
     }
 
-    public function get($token)
+    public function get($token, $guard)
     {
         return static::where([
             'token' => $token,
             'status' => $this->status_normal,
+            'guard' => $guard
         ])->first();
     }
 }

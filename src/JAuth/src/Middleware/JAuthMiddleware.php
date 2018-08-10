@@ -18,7 +18,7 @@ class JAuthMiddleware
 
     public function handle(Request $request, Closure $next, $guard = null, $needLogin = null)
     {
-        if (!AuthBase::guardNameIsValid($guard)) {
+        if (!AuthUtil::guardNameIsValid($guard)) {
             throw new SystemException('Middleware 无效 Auth Guard 传参');
         }
 

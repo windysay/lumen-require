@@ -4,6 +4,7 @@ namespace Yunhan\JAuth\Util;
 
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\Self_;
 
 class AuthUtil
 {
@@ -134,5 +135,11 @@ class AuthUtil
     public static function storageName()
     {
         return self::config('storage_driver', 'database');
+    }
+
+    public static function guardNameIsValid($guard)
+    {
+        $arr = self::getGuardConfig();
+        return array_key_exists($guard, $arr);
     }
 }

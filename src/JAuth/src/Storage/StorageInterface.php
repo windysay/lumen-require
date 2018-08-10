@@ -11,9 +11,9 @@ namespace Yunhan\JAuth\Storage;
 
 interface StorageInterface
 {
-    public function get($token);
+    public function get($token, $guard);
 
-    public function set($uid);
+    public function set($uid, $guard);
 
-    public function del($token);
+    public function del($token, $guard);
 }
