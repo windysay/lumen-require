@@ -4,6 +4,7 @@ namespace Yunhan\JAuth;
 
 use Illuminate\Support\Facades\Auth as LAuth;
 use Yunhan\JAuth\Models\Ticket;
+use Yunhan\JAuth\Storage\StorageEntity;
 use Yunhan\JAuth\Util\AuthUtil;
 
 class Auth
@@ -15,19 +16,20 @@ class Auth
      */
     public static function login($uid)
     {
-        $ticketModel = new Ticket();
-        return $ticketModel->login($uid);
+        $storage = new StorageEntity();
+        return $storage->getStorage()->set($uid);
     }
 
     /**
      * 退出登录
-     * @return int|bool
+     * @return bool
      */
     public static function logout()
     {
         $ticketModel = new Ticket();
         $token = AuthUtil::requestToken();
-        return $ticketModel->logout($token) > 0;
+        $storage = new StorageEntity();
+        return $storage->getStorage()->del($token);
     }
 
     /**
@@ -49,9 +51,9 @@ class Auth
         return LAuth::id();
     }
 
-    // JAuthinterface get set del get set del
+    // JAuthinterface get set del
     // JAuth cache token error jauth []
-    // jauth.php return [ 'token' => null, 'cache' => 'db' =>model 'cache', 'reids'],
+// config   jauth.php return [ 'token' => null, 'cache' => 'db' =>model 'cache', 'reids'],
     // cache [ dbCache[ model get set del] redisCache[redis ] facadeCache [cache] ]
     // token [ get ]
     // Auth login v logout re  [cache token] Auth;;JAuth()->login()

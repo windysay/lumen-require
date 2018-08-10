@@ -31,9 +31,8 @@ class Ticket extends Model
         $this->setTable(AuthUtil::getTicketTableName());
     }
 
-    public function login($uid)
+    public function add($token, $uid)
     {
-        $token = AuthUtil::generateUUID($uid);
         $add = [
             'uid' => $uid,
             'token' => $token,
@@ -45,22 +44,16 @@ class Ticket extends Model
         return $res ? $token : false;
     }
 
-    public function logout($token)
+    public function del($token)
     {
-        return static::where(['token' => $token])->update(['status' => $this->status_del]);
+        return static::where(['token' => $token])->update(['status' => $this->status_del]) > 0;
     }
 
-    /**
-     * 根据 token 查找
-     * @param $token
-     * @param array $columns
-     * @return mixed
-     */
-    public function findOneByToken($token, $columns = ['*'])
+    public function get($token)
     {
         return static::where([
             'token' => $token,
             'status' => $this->status_normal,
-        ])->first($columns);
+        ])->first();
     }
 }

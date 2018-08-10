@@ -51,7 +51,7 @@ class AuthUtil
      */
     public static function getTokenName()
     {
-        return self::config()['token_name'];
+        return self::config('token_name');
     }
 
     /**
@@ -59,9 +59,9 @@ class AuthUtil
      * @param string $name
      * @return array
      */
-    public static function config($name = 'JAuth')
+    public static function config($name, $default = null, $baseName = 'JAuth')
     {
-        return config($name);
+        return config("{$baseName}.{$name}", $default);
     }
 
     public static function currentTime()
@@ -119,7 +119,7 @@ class AuthUtil
      */
     public static function getTicketTableName()
     {
-        return self::config()['table_names']['ticket'];
+        return self::config('table_names.ticket');
     }
 
     /**
@@ -128,6 +128,11 @@ class AuthUtil
      */
     public static function getTokenExpiration()
     {
-        return self::config()['expiration'];
+        return self::config('expiration');
+    }
+
+    public static function storageName()
+    {
+        return self::config('storage_driver', 'database');
     }
 }

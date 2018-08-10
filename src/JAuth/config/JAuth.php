@@ -12,4 +12,7 @@ return [
 
     // 过期时间
     'expiration' => 3600 * 24,
+
+    // 'database',
+    'storage_driver' => 'database',
 ];
