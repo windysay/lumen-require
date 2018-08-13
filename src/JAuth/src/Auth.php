@@ -16,7 +16,7 @@ class Auth
      * @param $uid
      * @return bool|string token
      */
-    public static function login($user, $guard)
+    public static function login($uid, $guard)
     {
         $storage = new StorageEntity();
         if (! AuthUtil::guardNameIsValid($guard)) {
