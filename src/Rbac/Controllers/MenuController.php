@@ -23,9 +23,11 @@ class MenuController extends BaseController
     /**
      * 获取目录列表
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->output->success($this->menu->formatList());
+        //是否显示隐藏菜单
+        $showHidden = $request->input('showHidden', 0);
+        return $this->output->success($this->menu->formatList($showHidden));
     }
 
     /**

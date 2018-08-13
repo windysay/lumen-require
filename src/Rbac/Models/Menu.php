@@ -199,12 +199,14 @@ class Menu extends Model implements MenuContract
      * 获取格式化菜单列表
      * @return \Illuminate\Support\Collection
      */
-    public function formatList()
+    public function formatList($showHidden = 0)
     {
         $data = static::select(['id', 'id as key', 'name', 'path', 'icon',
             'parent_id', 'created_at', 'updated_at', 'sort'])
-            //隐藏菜单不显示
-            ->where(['is_show' => 1])
+            //判断是否显示隐藏菜单
+            ->when($showHidden == 0, function ($query) {
+                $query->where(['is_show' => 1]);
+            })
             ->get()
             ->toArray();
 
