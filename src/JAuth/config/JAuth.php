@@ -15,4 +15,11 @@ return [
 
     // 'database',
     'storage_driver' => 'database',
+
+    'driver_config' => [
+        'database' => '',
+        'redis' => [
+            'key_prefix' => 'lumen:'
+        ]
+    ],
 ];

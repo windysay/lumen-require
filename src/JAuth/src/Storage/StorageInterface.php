@@ -13,7 +13,7 @@ interface StorageInterface
 {
     public function get($token, $guard);
 
-    public function set($uid, $guard);
+    public function set($uid, $guard, $token, $exp);
 
     public function del($token, $guard);
 }

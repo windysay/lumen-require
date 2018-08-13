@@ -114,6 +114,11 @@ class AuthUtil
         return config('auth.guards');
     }
 
+    public static function getDriverConfig()
+    {
+        return self::config('driver_config');
+    }
+
     /**
      * 获取 ticket 表名
      * @return string

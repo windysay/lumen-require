@@ -22,7 +22,9 @@ class Auth
         if (! AuthUtil::guardNameIsValid($guard)) {
             throw new SystemException('无效guard');
         }
-        return $storage->getStorage()->set($uid, $guard);
+        $token = AuthUtil::generateUUID($uid);
+        $expiration = (int)AuthUtil::getTokenExpiration();
+        return $storage->getStorage()->set($uid, $guard, $token, $expiration);
     }
 
     /**
@@ -31,7 +33,6 @@ class Auth
      */
     public static function logout()
     {
-        $ticketModel = new Ticket();
         $token = AuthUtil::requestToken();
         $guard = AuthUtil::getCurrentGuard();
         $storage = new StorageEntity();

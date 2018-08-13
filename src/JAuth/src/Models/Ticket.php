@@ -31,7 +31,7 @@ class Ticket extends Model
         $this->setTable(AuthUtil::getTicketTableName());
     }
 
-    public function add($uid, $token, $guard)
+    public function add($uid, $token, $guard, $exp)
     {
         $add = [
             'uid' => $uid,
@@ -39,7 +39,7 @@ class Ticket extends Model
             'guard' => $guard,
             'status' => 0,
             'ip' => AuthUtil::request()->ip() ?: '',
-            'expiration' => AuthUtil::currentTime() + (int)AuthUtil::getTokenExpiration(),
+            'expiration' => AuthUtil::currentTime() + $exp,
         ];
         $res = $this->create($add)->id;
         return $res ? $token : false;
