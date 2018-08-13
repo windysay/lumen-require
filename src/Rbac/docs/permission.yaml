@@ -1,0 +1,168 @@
+swagger: '2.0'
+paths:
+  {url}/permission/index:
+    get:
+      tags:
+      - Rbac Permission
+      summary: 获取权限列表
+      operationId: index
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/permission/show:
+    get:
+      tags:
+      - Rbac Permission
+      summary: 权限详情
+      operationId: show
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: id
+        type: integer
+        description: 权限Id
+        required: true
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/permission/create:
+    post:
+      tags:
+      - Rbac Permission
+      summary: 创建权限
+      operationId: create
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: remark
+        type: string
+        description: 权限描述
+        required: true
+      - in: formData
+        name: name
+        type: string
+        description: 权限名称(一般写路由)
+        required: true
+      - in: formData
+        name: menu_id
+        type: integer
+        description: 关联菜单Id
+        required: true
+      - in: formData
+        name: method_id
+        type: integer
+        description: 请求方法(POST,GET...)
+        required: true
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/permission/delete:
+    post:
+      tags:
+      - Rbac Permission
+      summary: 删除权限
+      operationId: destory
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: id
+        type: integer
+        description: 权限Id
+        required: true
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/permission/edit:
+    post:
+      tags:
+      - Rbac Permission
+      summary: 编辑权限
+      operationId: edit
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: id
+        type: integer
+        description: 权限Id
+        required: true
+      - in: formData
+        name: remark
+        type: string
+        description: 权限描述
+        required: true
+      - in: formData
+        name: name
+        type: string
+        description: 权限名称(一般写路由)
+        required: true
+      - in: formData
+        name: menu_id
+        type: integer
+        description: 关联菜单Id,
+        required: true
+      - in: formData
+        name: method_id
+        type: integer
+        description: 请求方法(POST,GET...)
+        required: true
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/permission/allPermission:
+    get:
+      tags:
+      - Rbac Permission
+      summary: 获取所有权限
+      operationId: getAllPermission
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/permission/requestMethodList:
+    get:
+      tags:
+      - Rbac Permission
+      summary: 获取请求方法
+      operationId: getRequestMethodList
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      responses:
+        200:
+          description: 操作成功
