@@ -21,6 +21,17 @@ $app->configure('permission');
 $app->register(\Yunhan\Rbac\Providers\RbacServiceProvider::class);
 ```
 
+按需求修改permission配置文件
+```
+config/permission.php
+'table_names' => [
+    'roles' => 'roles',
+    ....
+]
+//数据库设置
+'connection' => 'mysql',
+```
+
 执行迁移文件
 ```
 php artisan migrate
@@ -104,5 +115,18 @@ if ($roleIds) {
 foreach ($user->roles as $role) {
     $user->removeRole($role);
 }
+```
+
+权限说明
+```
+后台对应的每一个路由都是一个权限,存在permission表中.不需要权限认证的路由可以在permission.php的white_list里面设置.
+储存格式为:请求方法+请求接口(GET api/admin/user/getUserList)
+如果存在这种形式路由需要设置别名
+    /api/article/1
+    $router->get('api/article/{id}', 'ArticleController@show');
+应该设置为
+    $router->get('api/article/{id}', ['as'=>'article.id','uses'=>ArticleController@show]);
+    as别名可以随便设置,权限存 `GET api/article/{id}`
+user id为1的用户(超级管理员)拥有所有权限
 ```
 

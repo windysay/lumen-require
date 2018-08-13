@@ -217,7 +217,7 @@ class Permission extends BasePermission
 
     private function checkMenu($menuId)
     {
-        if (Menu::where(['id' => $menuId])->value('parent_id') == 0) {
+        if (Menu::where(['id' => $menuId])->value('parent_id') === 0) {
             throw new \Exception('不能选择顶级菜单');
         }
 

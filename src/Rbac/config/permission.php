@@ -38,7 +38,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'roles' => 'new_roles',
+        'roles' => 'roles',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -46,7 +46,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'permissions' => 'new_permissions',
+        'permissions' => 'permissions',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -54,7 +54,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_permissions' => 'new_model_has_permissions',
+        'model_has_permissions' => 'model_has_permissions',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -62,7 +62,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_roles' => 'new_model_has_roles',
+        'model_has_roles' => 'model_has_roles',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -70,12 +70,12 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'role_has_permissions' => 'new_role_has_permissions',
+        'role_has_permissions' => 'role_has_permissions',
 
         /**
          * 菜单表,记录用户权限和对应的菜单
          */
-        'menu' => 'new_menu',
+        'menu' => 'menus',
 
     ],
 
@@ -95,7 +95,7 @@ return [
     'display_permission_in_exception' => false,
 
     //数据库设置
-    'connection' => 'mysql_admin',
+    'connection' => 'mysql',
 
     //不需要验证权限的名单
     'white_list' => [
