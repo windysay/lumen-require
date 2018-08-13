@@ -116,7 +116,7 @@ bootstrap/app.php 中添加路由中间件
         //...
         $uid = 1;
         //token操作
-        $token = Auth::login($uid);
+        $token = Auth::login($uid, $guard);
         return $token;
     }
     
@@ -147,7 +147,11 @@ bootstrap/app.php 中添加路由中间件
     
     public function selfInfo()
     {
+        // 获取用户信息，可在user model 内重写JAuthTrait的 getUserByIdToJAuth() 方法定义返回user实例
         $user = Auth::user();
+        // 获取id
+        $id = Auth::id();
+        // 获取用户额外绑定身份信息，在user model内重写JAuthTrait的 accessIdentity() 方法进行身份信息的提供
         $access = Auth::identity();
         return $user->email;
     }
