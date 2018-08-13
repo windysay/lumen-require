@@ -29,6 +29,11 @@ class Env
         return self::checkEnv(__FUNCTION__, ['production', 'staging']);
     }
 
+    public static function isStaging()
+    {
+        return self::checkEnv(__FUNCTION__, ['staging']);
+    }
+
     /**
      * 内部封装方法
      * @param string       $name
