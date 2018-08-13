@@ -109,11 +109,19 @@ class AuthUtil
         return config("auth.providers.{$providers}.model");
     }
 
+    /**
+     * 获取 auth.php config 配置的 guards 配置
+     * @return mixed
+     */
     public static function getGuardConfig()
     {
         return config('auth.guards');
     }
 
+    /**
+     * 获取 JAuth.php config 配置的 driver_config 配置
+     * @return array
+     */
     public static function getDriverConfig()
     {
         return self::config('driver_config');
@@ -137,11 +145,20 @@ class AuthUtil
         return self::config('expiration');
     }
 
+    /**
+     * 获取 storage_driver 配置(默认存储)
+     * @return array
+     */
     public static function storageName()
     {
         return self::config('storage_driver', 'database');
     }
 
+    /**
+     * 验证 guard 是否为配置中的有效项
+     * @param $guard
+     * @return bool
+     */
     public static function guardNameIsValid($guard)
     {
         $arr = self::getGuardConfig();
