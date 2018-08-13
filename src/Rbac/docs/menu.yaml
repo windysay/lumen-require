@@ -12,6 +12,12 @@ paths:
         type: string
         description: 用户TOKEN
         required: true
+      - in: formData
+        name: showHidden
+        type: integer
+        description: 是否显示隐藏菜单, 1 显示 0不显示.
+        required: false
+        default: 0
       responses:
         200:
           description: 操作成功
