@@ -117,6 +117,10 @@ class MenuController extends BaseController
 
     }
 
+    /**
+     * 通过权限获取用户对应菜单
+     * @return mixed
+     */
     public function menuList()
     {
         //获取用户

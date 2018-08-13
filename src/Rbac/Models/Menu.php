@@ -54,6 +54,16 @@ class Menu extends Model implements MenuContract
         $this->setTable(config('permission.table_names.menu'));
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('guard', function (Builder $builder) {
+            $table = config('permission.table_names.menu');
+            $builder->where("{$table}.guard_name", Guard::getDefaultName(static::class));
+        });
+    }
+
     /**
      * 通过角色获取用户菜单
      * @param Authorizable $user
@@ -123,6 +133,13 @@ class Menu extends Model implements MenuContract
         return $sortMenulist;
     }
 
+    /**
+     * 通过子节点获取所有父节点
+     * @param array $data
+     * @param int $id
+     * @param int $level
+     * @return array
+     */
     public static function getParentMenus($data = [], $id = 0, $level = 0)
     {
         if ($data && is_array($data)) {
@@ -146,6 +163,13 @@ class Menu extends Model implements MenuContract
         return static::$sortedTree;
     }
 
+    /**
+     * 无限极分类,树状结构
+     * @param array $data
+     * @param int $parent_id
+     * @param int $level
+     * @return array
+     */
     public static function getTree($data = [], $parent_id = 0, $level = 0)
     {
         $tree = [];
@@ -167,18 +191,6 @@ class Menu extends Model implements MenuContract
         }
         return $tree;
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('guard', function (Builder $builder) {
-            $table = config('permission.table_names.menu');
-            $builder->where("{$table}.guard_name", Guard::getDefaultName(static::class));
-        });
-    }
-
-    //获取所有子Id
 
     public function permission()
     {
@@ -230,6 +242,13 @@ class Menu extends Model implements MenuContract
             ->first();
     }
 
+    /**
+     * 创建或者更新菜单
+     * @param $data
+     * @param null $id
+     * @return mixed
+     * @throws \Exception
+     */
     public function createOrUpdateMenu($data, $id = null)
     {
 
@@ -254,6 +273,12 @@ class Menu extends Model implements MenuContract
         return static::updateOrCreate(['id' => $id], $data);
     }
 
+    /**
+     * 获取父节点的所有子节点
+     * @param $data
+     * @param $pid
+     * @return array
+     */
     public static function getChildrenByParentId($data, $pid)
     {
         $arr = [];
@@ -266,6 +291,12 @@ class Menu extends Model implements MenuContract
         return $arr;
     }
 
+    /**
+     * 删除菜单
+     * @param $id
+     * @return int
+     * @throws \Exception
+     */
     public function delMenu($id)
     {
         $check = static::where('parent_id', $id)->first();
