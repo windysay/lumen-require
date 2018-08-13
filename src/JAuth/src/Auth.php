@@ -16,7 +16,7 @@ class Auth
      * @param $uid
      * @return bool|string token
      */
-    public function login($user, $guard)
+    public static function login($user, $guard)
     {
         $storage = new StorageEntity();
         if (! AuthUtil::guardNameIsValid($guard)) {
@@ -29,7 +29,7 @@ class Auth
      * 退出登录
      * @return bool
      */
-    public function logout($token, $guard)
+    public static function logout($token, $guard)
     {
         $ticketModel = new Ticket();
         $token = AuthUtil::requestToken();
