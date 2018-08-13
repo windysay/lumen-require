@@ -29,7 +29,7 @@ class Auth
      * 退出登录
      * @return bool
      */
-    public static function logout($token, $guard)
+    public static function logout()
     {
         $ticketModel = new Ticket();
         $token = AuthUtil::requestToken();
