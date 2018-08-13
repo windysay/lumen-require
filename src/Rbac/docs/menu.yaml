@@ -1,0 +1,132 @@
+swagger: '2.0'
+paths:
+  {url}/menu/index:
+    get:
+      tags:
+      - Rbac Menu
+      summary: 获取菜单列表
+      operationId: index
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: showHidden
+        type: integer
+        description: 是否显示隐藏菜单, 1 显示 0不显示.
+        required: false
+        default: 0
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/menu/show:
+    get:
+      tags:
+      - Rbac Menu
+      summary: 获取菜单详情
+      operationId: show
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: id
+        type: string
+        description: 菜单ID
+        required: true
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/menu/create:
+    post:
+      tags:
+      - Rbac Menu
+      summary: 创建菜单
+      operationId: create
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: parent_id
+        type: integer
+        description: 父菜单ID,不传默认为0(顶级菜单)
+        required: false
+      - in: formData
+        name: name
+        type: string
+        description: 菜单名称
+        required: true
+      - in: formData
+        name: path
+        type: string
+        description: 前台路由
+        required: false
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/menu/edit:
+    post:
+      tags:
+      - Rbac Menu
+      summary: 修改菜单
+      operationId: edit
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: id
+        type: integer
+        description: 菜单ID
+        required: true
+      - in: formData
+        name: parent_id
+        type: string
+        description: 父菜单Id
+        required: true
+      - in: formData
+        name: name
+        type: string
+        description: 菜单名称
+        required: true
+      - in: formData
+        name: path
+        type: string
+        description: 前台路由
+        required: false
+      responses:
+        200:
+          description: 操作成功
+
+  {url}/menu/delete:
+    post:
+      tags:
+      - Rbac Menu
+      summary: 删除菜单
+      operationId: destory
+      parameters:
+      - in: formData
+        name: token
+        type: string
+        description: 用户TOKEN
+        required: true
+      - in: formData
+        name: id
+        type: string
+        description: 菜单ID
+        required: true
+      responses:
+        200:
+          description: 操作成功
