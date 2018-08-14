@@ -37,6 +37,11 @@ class Role extends BaseRole
         $this->connection = config('permission.connection');
     }
 
+    /**
+     * 给重新角色赋值
+     * @param $roleIds
+     * @return mixed
+     */
     public static function assignRoleToUser($roleIds)
     {
         $roles = static::whereIn('id', $roleIds)->get();
@@ -55,12 +60,21 @@ class Role extends BaseRole
         });
     }
 
+    /**
+     * 角色类表
+     * @return mixed
+     */
     public function list()
     {
         $lists = static::withCount('users')->get();
         return $lists;
     }
 
+    /**
+     * 获取角色和权限
+     * @param $id
+     * @return Builder|\Illuminate\Database\Eloquent\Model|null|object|Role
+     */
     public function findWithPermissions($id)
     {
         return static::with('permissions')
@@ -68,6 +82,11 @@ class Role extends BaseRole
             ->first();
     }
 
+    /**
+     * 通过角色Id获取菜单分组的权限列表
+     * @param array $roleIds
+     * @return array
+     */
     public function findWithPermissionByRole(array $roleIds)
     {
         $roles = static::with(['permissions' => function ($query) {
@@ -92,6 +111,11 @@ class Role extends BaseRole
         return $data;
     }
 
+    /**
+     * 删除角色
+     * @param $id
+     * @return bool|null
+     */
     public function destory($id)
     {
         //这里要使用Model的delete方法,触发删除事件清除缓存.同时这里也会把关联的中间表删掉
@@ -100,6 +124,11 @@ class Role extends BaseRole
         return $role->delete();
     }
 
+    /**
+     * 添加角色
+     * @param $data
+     * @return Role
+     */
     public function add($data)
     {
         $permissionIds = explode(',', $data['permission_ids']);
@@ -113,6 +142,11 @@ class Role extends BaseRole
 
     }
 
+    /**
+     * 去掉菜单列表(在菜单分组的权限列表,菜单Id全是负数)
+     * @param array $ids
+     * @return array
+     */
     public static function filterRoleIds(array $ids)
     {
         //去掉负数的id,负数id全部是菜单Id
@@ -121,6 +155,11 @@ class Role extends BaseRole
         });
     }
 
+    /**
+     * 编辑角色
+     * @param $data
+     * @return Role
+     */
     public function edit($data)
     {
         /** @var static $role */

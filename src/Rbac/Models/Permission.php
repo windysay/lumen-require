@@ -54,16 +54,31 @@ class Permission extends BasePermission
 
     }
 
+    /**
+     * 通过Id获取多个权限
+     * @param $ids
+     * @return mixed
+     */
     public static function findManyByInIds($ids)
     {
         return static::whereIn('id', $ids)->get();
     }
 
+    /**
+     * 获取请求方法列表
+     * @return array
+     */
     public static function getRequestMethondList()
     {
         return static::REQUEST_METHOND;
     }
 
+    /**
+     * 组合权限
+     * @param $methodId
+     * @param $uri
+     * @return bool|string
+     */
     public static function processName($methodId, $uri)
     {
         $methodName = static::getRequestMethond($methodId);
@@ -73,6 +88,11 @@ class Permission extends BasePermission
         return static::combineMethodUri($methodName, $uri);
     }
 
+    /**
+     * 获取请求方法对应的文字
+     * @param $id
+     * @return bool|mixed
+     */
     public static function getRequestMethond($id)
     {
         if (array_key_exists($id, static::REQUEST_METHOND)) {
@@ -81,6 +101,12 @@ class Permission extends BasePermission
         return false;
     }
 
+    /**
+     * 组合权限
+     * @param $method
+     * @param $uri
+     * @return string
+     */
     public static function combineMethodUri($method, $uri)
     {
         return $method . ' ' . $uri;
@@ -111,6 +137,10 @@ class Permission extends BasePermission
         return $this->hasMany(static::class, 'parent_id', 'id');
     }
 
+    /**
+     * 返回通过菜单分组的权限列表
+     * @return array
+     */
     public function list()
     {
         $lists = static::select(['menu_id'])
@@ -123,6 +153,11 @@ class Permission extends BasePermission
         return $this->getPermissionWithMenu($menuIds);
     }
 
+    /**
+     * 获取菜单和权限
+     * @param $menuIds
+     * @return array
+     */
     public function getPermissionWithMenu($menuIds)
     {
 
@@ -196,6 +231,11 @@ class Permission extends BasePermission
         return $tree;
     }
 
+    /**
+     * 通过Id获取权限列表
+     * @param array $ids
+     * @return array
+     */
     public function listByInIds(array $ids)
     {
         $lists = static::select(['menu_id'])
@@ -209,16 +249,28 @@ class Permission extends BasePermission
         return $this->getPermissionWithMenu($menuIds);
     }
 
+    /**
+     * 添加权限
+     * @param $data
+     * @return \Illuminate\Database\Eloquent\Model|Permission
+     * @throws \Exception
+     */
     public function add($data)
     {
         $this->checkMenu($data['menu_id']);
         return static::create($data);
     }
 
+    /**
+     * 更新或者创建检查
+     * @param $menuId
+     * @throws \Exception
+     */
     private function checkMenu($menuId)
     {
         $menu = Menu::where(['id' => $menuId])->first();
-        if ($menu->parent_id === 0 && $menu->is_show == 1) {
+        //is_show = 0是隐藏菜单,可以选择顶级菜单
+        if ($menu && $menu->parent_id === 0 && $menu->is_show == 1) {
             throw new \Exception('不能选择顶级菜单');
         }
 
@@ -227,6 +279,13 @@ class Permission extends BasePermission
         }
     }
 
+    /**
+     * 编辑权限
+     * @param $permissionId
+     * @param $data
+     * @return bool
+     * @throws \Exception
+     */
     public function edit($permissionId, $data)
     {
         $this->checkMenu($data['menu_id']);
@@ -235,9 +294,13 @@ class Permission extends BasePermission
         return $permission->fill($data)->save();
     }
 
+    /**
+     * 删除权限
+     * @param $id
+     * @return bool|null
+     */
     public function destory($id)
     {
-        //查看是否有子节点
         /** @var static $permission */
         $permission = static::findById((int)$id);
         //这里要使用Model的delete方法,触发删除事件清除缓存.同时这里也会把关联的中间表删掉
@@ -245,6 +308,11 @@ class Permission extends BasePermission
 
     }
 
+    /**
+     * 权限详情
+     * @param $id
+     * @return \Spatie\Permission\Contracts\Permission
+     */
     public function detail($id)
     {
         $permission = Permission::findById((int)$id);
@@ -258,6 +326,11 @@ class Permission extends BasePermission
         return $permission;
     }
 
+    /**
+     * 通过name获取请求Id
+     * @param $methodName
+     * @return bool|int|string
+     */
     public static function getRequestMethondId($methodName)
     {
         foreach (static::REQUEST_METHOND as $id => $method) {
