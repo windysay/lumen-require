@@ -4,7 +4,7 @@ namespace Yunhan\Rbac\Requests;
 
 use Faker\Factory;
 use Faker\Generator;
-use Yunhan\Rbac\Tests\Auth\User;
+use Yunhan\Rbac\Tests\App\Auth\User;
 use Yunhan\Rbac\Tests\BaseTestCase;
 
 class MenuTest extends BaseTestCase

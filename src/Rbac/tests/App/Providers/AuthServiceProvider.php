@@ -1,6 +1,6 @@
 <?php
 
-namespace Yunhan\Rbac\Tests\Providers;
+namespace Yunhan\Rbac\Tests\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
