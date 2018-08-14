@@ -270,7 +270,7 @@ class Permission extends BasePermission
     {
         $menu = Menu::where(['id' => $menuId])->first();
         //is_show = 0是隐藏菜单,可以选择顶级菜单
-        if ($menu->parent_id === 0 && $menu->is_show == 1) {
+        if ($menu && $menu->parent_id === 0 && $menu->is_show == 1) {
             throw new \Exception('不能选择顶级菜单');
         }
 

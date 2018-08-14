@@ -51,7 +51,7 @@ class Menu extends Model implements MenuContract
 
         parent::__construct($attributes);
 
-        $this->setTable(config('permission.table_names.menu'));
+        $this->setTable(config('permission.table_names.menus'));
     }
 
     protected static function boot()
@@ -59,7 +59,7 @@ class Menu extends Model implements MenuContract
         parent::boot();
 
         static::addGlobalScope('guard', function (Builder $builder) {
-            $table = config('permission.table_names.menu');
+            $table = config('permission.table_names.menus');
             $builder->where("{$table}.guard_name", Guard::getDefaultName(static::class));
         });
     }

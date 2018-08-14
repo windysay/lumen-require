@@ -75,7 +75,7 @@ return [
         /**
          * 菜单表,记录用户权限和对应的菜单
          */
-        'menu' => 'menus',
+        'menus' => 'menus',
 
     ],
 
