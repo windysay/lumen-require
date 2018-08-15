@@ -15,7 +15,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->configure('JAuth');
+
+        $path = realpath(__DIR__.'/../config/JAuth.php');
+        $this->mergeConfigFrom($path, 'JAuth');
     }
 
     /**
