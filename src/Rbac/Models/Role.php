@@ -79,7 +79,6 @@ class Role extends BaseRole
      */
     public function findWithMenus($id)
     {
-        //TODO 修改菜单
         $role = static::with(['menus' => function ($query) {
             $query->select(['name', 'id']);
         }])
@@ -96,22 +95,23 @@ class Role extends BaseRole
      */
     public function findWithPermissionByRole(array $roleIds)
     {
-        $roles = static::with(['permissions' => function ($query) {
-            $query->select(['id as permissionId']);
+        $roles = static::with(['menus' => function ($query) {
+            $query->select(['id as menuId']);
         }])
             ->whereIn('id', $roleIds)
             ->get()
             ->toArray();
         $data = [];
+        $select = ['id', 'name', 'path', 'icon', 'parent_id', 'sort', 'id as key', 'name as title'];
         foreach ($roles as $role) {
             //获取对应的permissionIds
-            $permiddionIds = [];
-            array_walk($role['permissions'], function ($v, $k) use (&$permiddionIds) {
-                array_push($permiddionIds, $v['permissionId']);
+            $menuIds = [];
+            array_walk($role['menus'], function ($v, $k) use (&$menuIds) {
+                array_push($menuIds, $v['menuId']);
             });
             $data[] = [
                 'name' => $role['name'],
-                'data' => (new Permission())->listByInIds($permiddionIds),
+                'data' => Menu::getMenuTreebyInId($menuIds, $select),
             ];
         }
 
@@ -125,6 +125,10 @@ class Role extends BaseRole
      */
     public function destory($id)
     {
+        if ($id == config('permission.super_admin')) {
+            throw new \Exception('超级管理员角色无法删除');
+        }
+
         //这里要使用Model的delete方法,触发删除事件清除缓存.同时这里也会把关联的中间表删掉
         /** @var static $role */
         $role = static::findById((int)$id);
@@ -138,7 +142,6 @@ class Role extends BaseRole
      */
     public function add($data)
     {
-        //TODO permission_ids换成 menu_ids
         $menuIds = array_filter(explode(',', $data['menu_ids']));
         /** @var static $role */
         $role = static::create($data);
@@ -172,7 +175,6 @@ class Role extends BaseRole
         $role = static::findById($data['id']);
         $role->name = $data['name'];
         $role->save();
-        //TODO permission_ids换成 menu_ids
         $menuIds = array_filter(explode(',', $data['menu_ids']));
         //更新菜单
         $result = $role->syncMenus($menuIds);

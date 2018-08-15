@@ -100,6 +100,8 @@ class RoleController extends BaseController
             return $this->output->success([]);
         } catch (RoleDoesNotExist $exception) {
             return $this->output->error('角色不存在');
+        } catch (\Exception $exception) {
+            return $this->output->error($exception->getMessage());
         }
 
     }
