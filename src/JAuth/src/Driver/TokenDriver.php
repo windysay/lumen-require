@@ -1,6 +1,6 @@
 <?php
 
-namespace Yunhan\JAuth;
+namespace Yunhan\JAuth\Driver;
 
 use Yunhan\JAuth\Exceptions\ExpiredException;
 use Yunhan\JAuth\Exceptions\SignatureTokenException;
@@ -8,7 +8,7 @@ use Yunhan\JAuth\Models\Ticket;
 use Yunhan\JAuth\Storage\StorageEntity;
 use Yunhan\JAuth\Util\AuthUtil;
 
-class AuthBase
+class TokenDriver
 {
     public static function getUser()
     {

@@ -3,6 +3,7 @@
 namespace Yunhan\JAuth;
 
 use Illuminate\Support\ServiceProvider;
+use Yunhan\JAuth\Driver\TokenDriver;
 use Yunhan\JAuth\Exceptions\ExpiredException;
 use Yunhan\JAuth\Exceptions\SignatureTokenException;
 use Yunhan\JAuth\Exceptions\UnauthorizedException;
@@ -35,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         // driver:token
         $this->app['auth']->viaRequest('token', function ($request) {
             try {
-                return AuthBase::getUser();
+                return TokenDriver::getUser();
             } catch (SignatureTokenException $e) {
                 return null;
             } catch (ExpiredException $e) {
