@@ -107,6 +107,25 @@ class CreatePermissionTables extends Migration
             $table->integer('sort')->default(0);
             $table->timestamps();
         });
+
+        //默认插入一个角色拥有所有权限
+        $db = \Illuminate\Support\Facades\DB::connection(config('permission.connection'));
+        $db->table($tableNames['roles'])
+            ->insert([
+                'id' => 1,
+                'name' => '超级管理员(所有权限)',
+                'guard_name' => 'admin',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+        $db->table($tableNames['model_has_roles'])->insert([
+            'role_id' => 1,
+            'model_type' => 'Admin\Models\Auth\Admin',
+            'model_id' => 1,
+        ]);
+
+
     }
 
     /**

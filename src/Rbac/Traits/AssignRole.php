@@ -33,6 +33,10 @@ trait AssignRole
 
         $uri = Permission::combineMethodUri($request->method(), $path);
         $permission = Permission::findByName($uri);
+        //判断是否是公共权限(menu_id = 0)
+        if ($permission->menu_id == 0) {
+            return true;
+        }
         //获取菜单对应的角色
         $roleIds = $permission->menu
             ->roles
@@ -85,5 +89,25 @@ trait AssignRole
             ->roles->flatMap(function ($role) {
                 return $role->menus;
             })->sort()->values();
+    }
+
+    /**
+     * 判断是否是超级管理员
+     * @param Authorizable $user
+     * @return bool
+     */
+    public function isSumperAdmin(): bool
+    {
+        //获取用户角色
+        $rolesIds = $this->roles
+            ->pluck('id')
+            ->toArray();
+
+        //查看是否拥有超级权限(roleId为1)
+        if (in_array(config('permission.super_admin'), $rolesIds, true)) {
+            return true;
+        }
+
+        return false;
     }
 }

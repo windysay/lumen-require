@@ -76,8 +76,8 @@ class Menu extends Model implements MenuContract
 
         //超级管理员获取所有权限
         // @phan-suppress-next-line PhanUndeclaredProperty
-        if ($user->id == 100) {
-            $menus = Permission::all();
+        if ($user->isSumperAdmin()) {
+            $menus = Menu::all();
         } else {
             /** @var \Illuminate\Support\Collection $menus */
             // @phan-suppress-next-line PhanUndeclaredMethod
@@ -325,12 +325,12 @@ class Menu extends Model implements MenuContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
 
-        $role = static::where('id', $id)->where('guard_name', $guardName)->first();
+        $menu = static::where('id', $id)->where('guard_name', $guardName)->first();
 
-        if (!$role) {
+        if (!$menu) {
             throw MenuDoesNotExist::withId($id);
         }
 
-        return $role;
+        return $menu;
     }
 }
