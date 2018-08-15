@@ -2,10 +2,21 @@
 
 namespace Yunhan\JAuth\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+use phpDocumentor\Reflection\DocBlock\Tags\See;
 use Yunhan\JAuth\Util\SsoHelper;
 
 trait SsoTrait
 {
+    /**
+     * 获取sso返回值中主键名
+     * @return string
+     */
+    public function getSsoKeyName()
+    {
+        return $this->primaryKey ?? 'id';
+    }
+
     /**
      * 定义oss user返回
      * @param string $token 表单或头部的 token 字段，可在JAuth自定义token键名
@@ -14,9 +25,13 @@ trait SsoTrait
     public function getUserByTokenToSso($token)
     {
         $user = SsoHelper::validate($token);
-        if ($user == false) {
+        if ($user === false) {
             return null;
         }
-        return $user;
+        $userModel = new self();
+        foreach ($user as $k => $v) {
+            $userModel->{$k} = $v;
+        }
+        return $userModel;
     }
 }

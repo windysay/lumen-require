@@ -16,7 +16,7 @@ class SsoHelper
         if (!$result) {
             return false;
         }
-        if (!isset($result->code) || $result->code != 200) {
+        if (!isset($result['code']) || $result['code'] != 200) {
             return false;
         }
         return $result;
@@ -46,7 +46,7 @@ class SsoHelper
             return false;
         }
         $ip = self::getIp();
-        $body = json_decode(self::httpSsoCheck($ticket, $ip, $actionId));
+        $body = json_decode(self::httpSsoCheck($ticket, $ip, $actionId), true);
         return $body;
     }
 

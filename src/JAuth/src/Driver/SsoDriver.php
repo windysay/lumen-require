@@ -39,6 +39,7 @@ class SsoDriver implements DriverInterface
 
     public function id()
     {
-        return LAuth::user()->id;
+        $user = LAuth::user();
+        return $user->{$user->getSsoKeyName()};
     }
 }
