@@ -6,6 +6,7 @@ use Faker\Factory;
 use Faker\Generator;
 use Yunhan\Rbac\Models\Menu;
 use Yunhan\Rbac\Models\Permission;
+use Yunhan\Rbac\Tests\App\Auth\User;
 use Yunhan\Rbac\Tests\BaseTestCase;
 
 class PermissionTest extends BaseTestCase
@@ -19,6 +20,10 @@ class PermissionTest extends BaseTestCase
     public function setUp()
     {
         parent::setUp();
+
+        //模拟登陆用户
+        $user = User::find(1);
+        $this->be($user, static::DEFAULT_GUARD);
 
         $this->faker = Factory::create('zh_CN');
         $this->table = config('permission.table_names.permissions');

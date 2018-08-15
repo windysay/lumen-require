@@ -5,6 +5,7 @@ namespace Yunhan\Rbac\Requests;
 use Faker\Factory;
 use Faker\Generator;
 use Yunhan\Rbac\Models\Menu;
+use Yunhan\Rbac\Tests\App\Auth\User;
 use Yunhan\Rbac\Tests\BaseTestCase;
 
 class RoleTest extends BaseTestCase
@@ -18,6 +19,10 @@ class RoleTest extends BaseTestCase
     public function setUp()
     {
         parent::setUp();
+
+        //模拟登陆用户
+        $user = User::find(1);
+        $this->be($user, static::DEFAULT_GUARD);
 
         $this->faker = Factory::create('zh_CN');
         $this->table = config('permission.table_names.roles');
@@ -48,30 +53,22 @@ class RoleTest extends BaseTestCase
 
     public function getParameters()
     {
-        $permission = $this->generatePermission();
+        $menu = $this->generateMenu();
 
         return [
             'name' => $this->faker->name,
-            'permission_ids' => $permission['id'],
+            'menu_ids' => $menu->id,
         ];
     }
 
-    public function generatePermission()
+    public function generateMenu()
     {
-        $menuId = Menu::withoutGlobalScopes()
+        $menu = Menu::withoutGlobalScopes()
             ->where('parent_id', '>', 0)
             ->where(['guard_name' => 'admin'])
-            ->value('id');
-        $params = [
-            'remark' => $this->faker->name,
-            'name' => $this->faker->name,
-            'menu_id' => $menuId,
-            'method_id' => 1,
-        ];
-        $permission = $this->call('POST', 'permission/create', $params)
-            ->getOriginalContent();
+            ->first();
 
-        return $permission['data'];
+        return $menu;
     }
 
     public function testCreate()
@@ -87,7 +84,7 @@ class RoleTest extends BaseTestCase
     public function testEdit()
     {
         $role = $this->generateRole();
-        $permission = $this->generatePermission();
+        $menu = $this->generateMenu();
 
         $name = 'Hello World';
 
@@ -95,7 +92,7 @@ class RoleTest extends BaseTestCase
             'id' => $role['id'],
             'name' => $name,
             'method_id' => 2,
-            'permission_ids' => $permission['id'],
+            'menu_ids' => $menu->id,
         ];
 
         $this->post('role/edit', $params)
@@ -123,10 +120,10 @@ class RoleTest extends BaseTestCase
     public function testGetPermissionByRole()
     {
 
-        $permission = $this->generatePermission();
+        $menu = $this->generateMenu();
         //生成角色
         $data = $this->call('POST', 'role/create',
-            ['name' => $this->faker->name, 'permission_ids' => $permission['id']])
+            ['name' => $this->faker->name, 'menu_ids' => $menu->id])
             ->getOriginalContent();
 
         $this->get('role/getPermissionByRole?role_ids=' . $data['data']['id'])

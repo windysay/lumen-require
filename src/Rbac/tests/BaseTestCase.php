@@ -75,8 +75,22 @@ abstract class BaseTestCase extends \Laravel\Lumen\Testing\TestCase
 
         // $app->middleware([]);
 
-        $app->routeMiddleware([
-            'AdminRbac' => \Yunhan\Rbac\Middleware\RbacMiddleware::class,
+
+        config([
+            'permission.table_names' => [
+                'roles' => 'new_roles',
+                'permissions' => 'new_permissions',
+                'model_has_permissions' => 'new_model_has_permissions',
+                'model_has_roles' => 'new_model_has_roles',
+                'role_has_permissions' => 'new_role_has_permissions',
+                'menus' => 'new_menus',
+                'role_has_menus' => 'new_role_has_menus',
+            ],
+            'permission.route_params.' . static::DEFAULT_GUARD => [
+                'namespace' => '\Yunhan\Rbac\Controllers',
+                'middleware' => [],
+                'prefix' => '',
+            ],
         ]);
 
 
@@ -91,47 +105,9 @@ abstract class BaseTestCase extends \Laravel\Lumen\Testing\TestCase
         |
         */
 
-        $app->configure('permission');
-
         // $app->register(App\Providers\AppServiceProvider::class);
         $app->register(\Yunhan\Rbac\Providers\RbacServiceProvider::class);
         $app->register(\Yunhan\Rbac\Tests\App\Providers\AuthServiceProvider::class);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Load The Application Routes
-        |--------------------------------------------------------------------------
-        |
-        | Next we will include the routes file so that they can all be added to
-        | the application. This will provide all of the URLs the application
-        | can respond to, as well as the controllers that may handle them.
-        |
-        */
-
-        $app->router->group(['namespace' => 'Yunhan\Rbac\Controllers'], function ($router) {
-
-            $path = static::BASE_DIR . '/../routes/';
-            /*
-             * 管理员
-             */
-            //目录管理
-            require $path . 'menu.php';
-            //后台操作权限
-            require $path . 'permission.php';
-            //用户权限组
-            require $path . 'role.php';
-        });
-
-        config([
-            'permission.table_names' => [
-                'roles' => 'new_roles',
-                'permissions' => 'new_permissions',
-                'model_has_permissions' => 'new_model_has_permissions',
-                'model_has_roles' => 'new_model_has_roles',
-                'role_has_permissions' => 'new_role_has_permissions',
-                'menus' => 'new_menus',
-            ],
-        ]);
 
         config([
             'auth' => [

@@ -18,6 +18,10 @@ class MenuTest extends BaseTestCase
     {
         parent::setUp();
 
+        //模拟登陆用户
+        $user = User::find(1);
+        $this->be($user, static::DEFAULT_GUARD);
+
         $this->faker = Factory::create('zh_CN');
         $this->table = config('permission.table_names.menus');
         $this->connection = config('permission.connection');
@@ -92,9 +96,6 @@ class MenuTest extends BaseTestCase
 
     public function testMenuList()
     {
-        //模拟登陆用户
-        $user = User::find(1);
-        $this->be($user, static::DEFAULT_GUARD);
 
         $this->get('menu/menuList')
             ->assertResponseStatus(200);

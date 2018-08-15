@@ -77,7 +77,26 @@ class CreatePermissionTables extends Migration
             app('cache')->forget('spatie.permission.cache');
         });
 
-        $schema->create($tableNames['menu'], function (Blueprint $table) {
+        $schema->create($tableNames['role_has_menus'], function (Blueprint $table) use ($tableNames) {
+            $table->unsignedInteger('menu_id');
+            $table->unsignedInteger('role_id');
+
+            $table->foreign('menu_id')
+                ->references('id')
+                ->on($tableNames['menus'])
+                ->onDelete('cascade');
+
+            $table->foreign('role_id')
+                ->references('id')
+                ->on($tableNames['roles'])
+                ->onDelete('cascade');
+
+            $table->primary(['menu_id', 'role_id']);
+
+            app('cache')->forget('spatie.permission.cache');
+        });
+
+        $schema->create($tableNames['menus'], function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->default(0)->comment('父Id');
             $table->string('name')->default('菜单名称');
@@ -88,6 +107,25 @@ class CreatePermissionTables extends Migration
             $table->integer('sort')->default(0);
             $table->timestamps();
         });
+
+        //默认插入一个角色拥有所有权限
+        $db = \Illuminate\Support\Facades\DB::connection(config('permission.connection'));
+        $db->table($tableNames['roles'])
+            ->insert([
+                'id' => 1,
+                'name' => '超级管理员(所有权限)',
+                'guard_name' => 'admin',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+        $db->table($tableNames['model_has_roles'])->insert([
+            'role_id' => 1,
+            'model_type' => 'Admin\Models\Auth\Admin',
+            'model_id' => 1,
+        ]);
+
+
     }
 
     /**
@@ -106,6 +144,7 @@ class CreatePermissionTables extends Migration
         $schema->drop($tableNames['model_has_permissions']);
         $schema->drop($tableNames['roles']);
         $schema->drop($tableNames['permissions']);
-        $schema->drop($tableNames['menu']);
+        $schema->drop($tableNames['menus']);
+        $schema->drop($tableNames['role_has_menus']);
     }
 }

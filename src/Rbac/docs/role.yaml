@@ -55,9 +55,9 @@ paths:
         description: 角色名称
         required: true
       - in: formData
-        name: permission_ids
+        name: menu_ids
         type: string
-        description: 权限Id,用逗号(,)分割
+        description: 菜单Id,用逗号(,)分割
         required: true
       responses:
         200:
@@ -107,9 +107,9 @@ paths:
         description: 角色名称
         required: true
       - in: formData
-        name: permission_ids
+        name: menu_ids
         type: string
-        description: 权限Id,用逗号(,)分割
+        description: 菜单Id,用逗号(,)分割
         required: true
       responses:
         200:
