@@ -4,8 +4,10 @@ namespace Yunhan\Rbac\Models;
 
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Role as BaseRole;
+use Yunhan\Rbac\Contracts\MenuContract;
 
 /**
  * Yunhan\Rbac\Models\Role
@@ -75,11 +77,16 @@ class Role extends BaseRole
      * @param $id
      * @return Builder|\Illuminate\Database\Eloquent\Model|null|object|Role
      */
-    public function findWithPermissions($id)
+    public function findWithMenus($id)
     {
-        return static::with('permissions')
+        //TODO 修改菜单
+        $role = static::with(['menus' => function ($query) {
+            $query->select(['name', 'id']);
+        }])
             ->whereKey($id)
             ->first();
+
+        return $role;
     }
 
     /**
@@ -131,12 +138,11 @@ class Role extends BaseRole
      */
     public function add($data)
     {
-        $permissionIds = explode(',', $data['permission_ids']);
-        //去掉负数的id,负数id全部是菜单Id
-        $permissionIds = static::filterRoleIds($permissionIds);
+        //TODO permission_ids换成 menu_ids
+        $menuIds = array_filter(explode(',', $data['menu_ids']));
         /** @var static $role */
         $role = static::create($data);
-        $result = $role->givePermissionTo($permissionIds);
+        $result = $role->giveMenuTo($menuIds);
 
         return $role;
 
@@ -166,15 +172,88 @@ class Role extends BaseRole
         $role = static::findById($data['id']);
         $role->name = $data['name'];
         $role->save();
-
-        $permissionIds = explode(',', $data['permission_ids']);
-        //去掉负数的id,负数id全部是菜单Id
-        $permissionIds = static::filterRoleIds($permissionIds);
-        //更新权限
-        $result = $role->syncPermissions($permissionIds);
+        //TODO permission_ids换成 menu_ids
+        $menuIds = array_filter(explode(',', $data['menu_ids']));
+        //更新菜单
+        $result = $role->syncMenus($menuIds);
 
         return $role;
 
+    }
+
+    /**
+     * Remove all current menu and set the given ones.
+     *
+     * @param string|array|\Yunhan\Rbac\Contracts\MenuContract|\Illuminate\Support\Collection $menus
+     *
+     * @return $this
+     */
+    public function syncMenus(...$menus)
+    {
+        $this->menus()->detach();
+
+        return $this->giveMenuTo($menus);
+    }
+
+    /**
+     * 权限对应菜单
+     * @param mixed ...$menus
+     * @return $this|BaseRole
+     */
+    public function giveMenuTo(...$menus)
+    {
+        $menus = collect($menus)
+            ->flatten()
+            ->map(function ($menus) {
+                return $this->getStoredMenu($menus);
+            })
+            ->each(function ($menus) {
+                $this->ensureModelSharesGuard($menus);
+            })
+            ->all();
+
+        $this->menus()->saveMany($menus);
+
+        $this->forgetCachedPermissions();
+
+        return $this;
+    }
+
+    /**
+     * A role may be given various permissions.
+     */
+    public function menus(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            config('permission.models.menu'),
+            config('permission.table_names.role_has_menus')
+        );
+    }
+
+    /**
+     *
+     * @param string|array|\Yunhan\Rbac\Contracts\MenuContract|\Illuminate\Support\Collection $menus
+     *
+     * @return \Yunhan\Rbac\Contracts\MenuContract|\Yunhan\Rbac\Contracts\MenuContract[]|\Illuminate\Support\Collection
+     */
+    protected function getStoredMenu($menus)
+    {
+        if (is_numeric($menus)) {
+            return app(MenuContract::class)->findById($menus, $this->getDefaultGuardName());
+        }
+
+        if (is_string($menus)) {
+            return app(MenuContract::class)->findByName($menus, $this->getDefaultGuardName());
+        }
+
+        if (is_array($menus)) {
+            return app(MenuContract::class)
+                ->whereIn('name', $menus)
+                ->whereIn('guard_name', $this->getGuardNames())
+                ->get();
+        }
+
+        return $menus;
     }
 
 }

@@ -72,6 +72,9 @@ return [
 
         'role_has_permissions' => 'role_has_permissions',
 
+
+        'role_has_menus' => 'role_has_menus',
+
         /**
          * 菜单表,记录用户权限和对应的菜单
          */
@@ -107,4 +110,20 @@ return [
 
     //数据输出
     'output' => \Yunhan\Rbac\Utils\OutPutDataFormat::class,
+
+    //拥有所有权限的角色Id
+    'super_admin' => 1,
+
+    //是否启用默认路由
+    'use_default_route' => true,
+    //需要加载路由的guard
+    'route_guard' => ['admin'],
+    'route_params' => [
+        //guard
+        'admin' => [
+            'namespace' => '\Yunhan\Rbac\Controllers',
+            'middleware' => ['RBAC'],
+            'prefix' => 'admin',
+        ],
+    ],
 ];

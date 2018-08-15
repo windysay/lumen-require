@@ -47,7 +47,7 @@ class RoleController extends BaseController
         ]);
         try {
 
-            $role = $this->role->findWithPermissions($request->input('id'));
+            $role = $this->role->findWithMenus($request->input('id'));
             return $this->output->success($role);
         } catch (RoleDoesNotExist $exception) {
             return $this->output->error('角色不存在');
@@ -64,11 +64,11 @@ class RoleController extends BaseController
     {
         $this->validate($request, [
             'name' => 'required|max:255',
-            'permission_ids' => 'required',
+            'menu_ids' => 'required',
         ], [
             'name.required' => '名称不能为空',
             'name.max' => '名称不能超过255个字符',
-            'permission_ids.required' => '权限不能为空',
+            'menu_ids.required' => '权限不能为空',
         ]);
 
         try {
@@ -114,12 +114,12 @@ class RoleController extends BaseController
         $this->validate($request, [
             'id' => 'required|integer',
             'name' => 'required|max:255',
-            'permission_ids' => 'required',
+            'menu_ids' => 'required',
         ], [
             'id.required' => 'ID不能为空',
             'name.required' => '名称不能为空',
             'name.max' => '名称不能超过255个字符',
-            'permission_ids.required' => '权限不能为空',
+            'menu_ids.required' => '权限不能为空',
         ]);
 
         try {
