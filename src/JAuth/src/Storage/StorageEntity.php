@@ -33,4 +33,9 @@ class StorageEntity
     {
         return $this->storage;
     }
+
+    public static function getInstance()
+    {
+        return (new self())->getStorage();
+    }
 }

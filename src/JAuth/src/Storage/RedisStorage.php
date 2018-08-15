@@ -33,7 +33,7 @@ class RedisStorage implements StorageInterface
 
     protected function getKey($token, $guard)
     {
-        $prefix = AuthUtil::getDriverConfig()['redis']['key_prefix'] ?? 'JAuth:';
+        $prefix = AuthUtil::getStorageConfig()['redis']['key_prefix'] ?? 'JAuth:';
         return $prefix . $guard . ':' . $token;
     }
 }

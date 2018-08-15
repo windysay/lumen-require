@@ -1,25 +1,29 @@
 <?php
 
 return [
-
-    'table_names' => [
-        // token存储数据表名
-        'ticket' => 'ticket',
-    ],
-
     // token 键名
     'token_name' => 'token',
 
     // 过期时间
     'expiration' => 3600 * 24,
 
-    // 'database',
-    'storage_driver' => 'database',
-
-    'driver_config' => [
-        'database' => '',
-        'redis' => [
-            'key_prefix' => 'lumen:'
+    'driver' => [
+        'token' => [
+            // 'database','redis'
+            'storage_default' => 'database',
+            'storage_config' => [
+                'database' => [
+                    // token存储数据表名
+                    'ticket_table_name' => 'ticket'
+                ],
+                'redis' => [
+                    'key_prefix' => 'lumen:'
+                ]
+            ],
+        ],
+        'session' => [
+        ],
+        'sso' => [
         ]
-    ],
+    ]
 ];

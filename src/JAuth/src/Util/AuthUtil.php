@@ -83,9 +83,9 @@ class AuthUtil
      * 获取当前 Guard 对应 driver
      * @return string
      */
-    public static function getCurrentDriver()
+    public static function getDriverByGuard($guard = null)
     {
-        $currentGuard = self::getCurrentGuard();
+        $currentGuard = empty($guard) ? self::getCurrentGuard() : $guard;
         return config("auth.guards.{$currentGuard}.driver");
     }
 
@@ -122,9 +122,9 @@ class AuthUtil
      * 获取 JAuth.php config 配置的 driver_config 配置
      * @return array
      */
-    public static function getDriverConfig()
+    public static function getStorageConfig()
     {
-        return self::config('driver_config');
+        return self::config('driver.token.storage_config');
     }
 
     /**
@@ -133,7 +133,7 @@ class AuthUtil
      */
     public static function getTicketTableName()
     {
-        return self::config('table_names.ticket');
+        return self::config('driver.token.storage_config.database.ticket_table_name');
     }
 
     /**
@@ -151,7 +151,7 @@ class AuthUtil
      */
     public static function storageName()
     {
-        return self::config('storage_driver', 'database');
+        return self::config('driver.token.storage_default', 'database');
     }
 
     /**

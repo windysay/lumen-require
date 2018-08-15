@@ -3,6 +3,7 @@
 namespace Yunhan\JAuth;
 
 use Illuminate\Support\Facades\Auth as LAuth;
+use Yunhan\JAuth\Driver\DriverEntity;
 use Yunhan\JAuth\Exceptions\SignatureTokenException;
 use Yunhan\JAuth\Exceptions\SystemException;
 use Yunhan\JAuth\Models\Ticket;
@@ -14,17 +15,14 @@ class Auth
     /**
      * 登录获取 token
      * @param $uid
+     * @param $guard
      * @return bool|string token
      */
     public static function login($uid, $guard)
     {
-        $storage = new StorageEntity();
-        if (! AuthUtil::guardNameIsValid($guard)) {
-            throw new SystemException('无效guard');
-        }
         $token = AuthUtil::generateUUID($uid);
         $expiration = (int)AuthUtil::getTokenExpiration();
-        return $storage->getStorage()->set($uid, $guard, $token, $expiration);
+        return DriverEntity::getInstance($guard)->login($uid, $guard, $token, $expiration);
     }
 
     /**
@@ -35,8 +33,7 @@ class Auth
     {
         $token = AuthUtil::requestToken();
         $guard = AuthUtil::getCurrentGuard();
-        $storage = new StorageEntity();
-        return $storage->getStorage()->del($token, $guard);
+        return DriverEntity::getInstance($guard)->logout($token, $guard);
     }
 
     /**
@@ -50,12 +47,12 @@ class Auth
 
     public static function user()
     {
-        return LAuth::user();
+        return DriverEntity::getInstance()->user();
     }
 
     public static function id()
     {
-        return LAuth::id();
+        return DriverEntity::getInstance()->id();
     }
 
     // JAuthinterface get set del
