@@ -9,6 +9,7 @@
 
 namespace Yunhan\JAuth\Storage;
 
+use http\Exception\InvalidArgumentException;
 use Yunhan\JAuth\Util\AuthUtil;
 
 class StorageEntity
@@ -23,6 +24,8 @@ class StorageEntity
                 $this->storage = new DbStorage();break;
             case "redis" :
                 $this->storage = new RedisStorage();break;
+            default :
+                throw new InvalidArgumentException("storage 参数错误：{$sNmae}");
         }
     }
 
