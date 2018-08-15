@@ -1,6 +1,6 @@
 <?php
 
-namespace Yunhan\Rbac\Tests\Auth;
+namespace Yunhan\Rbac\Tests\App\Auth;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;

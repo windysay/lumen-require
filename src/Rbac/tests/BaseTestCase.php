@@ -3,7 +3,7 @@
 namespace Yunhan\Rbac\Tests;
 
 use Laravel\Lumen\Testing\DatabaseTransactions;
-use Yunhan\Rbac\Tests\Auth\User;
+use Yunhan\Rbac\Tests\App\Auth\User;
 
 abstract class BaseTestCase extends \Laravel\Lumen\Testing\TestCase
 {
@@ -95,7 +95,7 @@ abstract class BaseTestCase extends \Laravel\Lumen\Testing\TestCase
 
         // $app->register(App\Providers\AppServiceProvider::class);
         $app->register(\Yunhan\Rbac\Providers\RbacServiceProvider::class);
-        $app->register(\Yunhan\Rbac\tests\Providers\AuthServiceProvider::class);
+        $app->register(\Yunhan\Rbac\Tests\App\Providers\AuthServiceProvider::class);
 
         /*
         |--------------------------------------------------------------------------

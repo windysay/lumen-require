@@ -135,3 +135,8 @@ user id为1的用户(超级管理员)拥有所有权限
 `权限使用的是laravel-permission扩展,具体使用可以参考laravel-permission文档`
 - [laravel-permission](https://github.com/spatie/laravel-permission)
 
+## todo
+- [ ] 权限分组
+- [ ] 父级权限保存
+- [ ] 页面权限需要前端做对应过滤
+
