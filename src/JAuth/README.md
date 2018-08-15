@@ -32,7 +32,7 @@ php artisan migrate
 
 user model 引入trait
 
-    use Authenticatable, Authorizable, JAuthTrait;
+    use Authenticatable, Authorizable, JAuthTrait, SsoTrait;
 
 可重写JAuthTrait中方法进行相应配置
 
@@ -44,6 +44,7 @@ model例：
     
     use Illuminate\Auth\Authenticatable;
     use Yunhan\JAuth\Traits\JAuthTrait;
+    use Yunhan\JAuth\Traits\SsoTrait;
     use Laravel\Lumen\Auth\Authorizable;
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -52,7 +53,7 @@ model例：
     class User extends Model implements AuthenticatableContract, AuthorizableContract
     {
         use Authenticatable, Authorizable;
-        use JAuthTrait;
+        use JAuthTrait, SsoTrait;
     
         /**
          * The attributes that are mass assignable.
@@ -99,6 +100,14 @@ bootstrap/app.php 中添加路由中间件
 > 建议为每个接口配置此中间件，无需登录认证的接口第二个参数不传即可
 
 ## 使用
+
+### guard 配置
+
+dirver支持：token、sso
+
+token：
+
+### token
 
 填充user数据        
 //php artisan db:seed
@@ -156,6 +165,30 @@ bootstrap/app.php 中添加路由中间件
         return $user->email;
     }
     
+### sso 
+
+sso暂不提供login和logout功能
+
+    $router->get('selfInfo', [
+        'middleware' => 'JAuth:user,1',
+        'uses' => 'Controller@selfInfo'
+    ]);
+    
+    use Yunhan\JAuth\Auth;
+    
+    public function selfInfo()
+    {
+        // 获取用户信息，可在user model 内重写SsoTrait的 getUserByTokenToSso() 方法定义返回user实例
+        $user = Auth::user();
+        // 获取id
+        $id = Auth::id();
+        // 获取用户额外绑定身份信息，在user model内重写JAuthTrait的 accessIdentity() 方法进行身份信息的提供
+        $access = Auth::identity();
+        return $user->email;
+    }
+    
 ### 自定义user与identity
 
 JAuthTrait内定义有user返回方式与identity返回值得方法，可进行重写自定义返回。
+
+SsoTrait内定义有 sso driver返回user方式，可进行重写自定义返回。

@@ -20,8 +20,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->app->configure('JAuth');
 
-        $path = realpath(__DIR__.'/../config/JAuth.php');
-        $this->mergeConfigFrom($path, 'JAuth');
+        $jauthPath = realpath(__DIR__.'/../config/JAuth.php');
+        $this->mergeConfigFrom($jauthPath, 'JAuth');
     }
 
     /**
