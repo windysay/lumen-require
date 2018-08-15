@@ -9,7 +9,7 @@ use Yunhan\JAuth\Util\SsoHelper;
 trait SsoTrait
 {
     /**
-     * 获取sso返回值中主键名
+     * 获取sso返回值中主键名，此字段值为 Auth::id() 返回值
      * @return string
      */
     public function getSsoKeyName()
