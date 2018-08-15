@@ -2,7 +2,9 @@
 
 namespace Yunhan\JAuth;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\ServiceProvider;
+use Yunhan\JAuth\Driver\SsoDriver;
 use Yunhan\JAuth\Driver\TokenDriver;
 use Yunhan\JAuth\Exceptions\ExpiredException;
 use Yunhan\JAuth\Exceptions\SignatureTokenException;
@@ -49,7 +51,11 @@ class AuthServiceProvider extends ServiceProvider
         });
         // driver:sso
         $this->app['auth']->viaRequest('sso', function ($request) {
-            // ..
+            try {
+                return SsoDriver::getUser();
+            } catch (AuthorizationException $e) {
+                return null;
+            }
         });
     }
 }
