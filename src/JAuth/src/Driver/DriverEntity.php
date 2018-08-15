@@ -25,8 +25,8 @@ class DriverEntity
         switch ($dirver) {
             case "token" :
                 $this->driver = new TokenDriver();break;
-//            case "sso" :
-//                $this->driver = new RedisStorage();break;
+            case "sso" :
+                $this->driver = new SsoDriver();break;
             default :
                 throw new InvalidArgumentException("{$guard} dirver 类型错误");
         }
