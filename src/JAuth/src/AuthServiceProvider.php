@@ -29,8 +29,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->app['auth']->viaRequest('default', function ($request) {
             throw new UnauthorizedException('未进行身份认证');
         });
-        // 获取用户
-        $this->app['auth']->viaRequest('JAuth', function ($request) {
+        // driver:token
+        $this->app['auth']->viaRequest('token', function ($request) {
             try {
                 return AuthBase::getUser();
             } catch (SignatureTokenException $e) {
@@ -38,6 +38,14 @@ class AuthServiceProvider extends ServiceProvider
             } catch (ExpiredException $e) {
                 return null;
             }
+        });
+        // driver:session
+        $this->app['auth']->viaRequest('session', function ($request) {
+            // ..
+        });
+        // driver:sso
+        $this->app['auth']->viaRequest('sso', function ($request) {
+            // ..
         });
     }
 }
