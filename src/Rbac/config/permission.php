@@ -72,6 +72,9 @@ return [
 
         'role_has_permissions' => 'role_has_permissions',
 
+
+        'role_has_menus' => 'role_has_menus',
+
         /**
          * 菜单表,记录用户权限和对应的菜单
          */

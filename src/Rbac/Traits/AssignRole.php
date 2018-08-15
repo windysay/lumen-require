@@ -2,15 +2,24 @@
 
 namespace Yunhan\Rbac\Traits;
 
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Traits\HasRoles;
 use Yunhan\Rbac\Models\Permission;
+use Yunhan\Rbac\Models\Role;
 
 trait AssignRole
 {
     use HasRoles;
 
-    public function checkPermission(Request $request, $userRoles)
+    /**
+     * 验证用户权限
+     * @param Request $request
+     * @param $userRoleIds
+     * @return bool
+     */
+    public function checkPermission(Request $request, $userRoleIds)
     {
         $path = $request->path();
         //查看是否设置别名,兼容 test/{id} 这种路由
@@ -25,8 +34,56 @@ trait AssignRole
         $uri = Permission::combineMethodUri($request->method(), $path);
         $permission = Permission::findByName($uri);
         //获取菜单对应的角色
-        $roles = $permission->menu()->roles;
+        $roleIds = $permission->menu
+            ->roles
+            ->pluck('id')
+            ->toArray();
 
+        //判断用户权限
+        foreach ($roleIds as $roleId) {
+            if (in_array($roleId, $userRoleIds, true)) {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    /**
+     * 给角色赋值
+     * @param array $roleIds
+     * @param Authorizable $user
+     */
+    public function assignRoleToUser(array $roleIds, Authorizable $user)
+    {
+        $roleIds = array_filter($roleIds);
+        if ($roleIds) {
+            //查找角色
+            $roles = Role::whereIn('id', $roleIds)->get();
+            //添加角色
+            $user->assignRole($roles);
+        }
+    }
+
+    /**
+     * 清除用户所有角色
+     * @param Authorizable $user
+     */
+    public function removeAllRoles(Authorizable $user)
+    {
+        foreach ($user->roles as $role) {
+            $user->removeRole($role);
+        }
+    }
+
+    /**
+     * Return all the permissions the model has via roles.
+     */
+    public function getMenusViaRoles(): Collection
+    {
+        return $this->load('roles', 'roles.menus')
+            ->roles->flatMap(function ($role) {
+                return $role->menus;
+            })->sort()->values();
     }
 }

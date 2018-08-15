@@ -5,8 +5,10 @@ namespace Yunhan\Rbac\Models;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Guard;
 use Yunhan\Rbac\Contracts\MenuContract;
+use Yunhan\Rbac\Exceptions\MenuDoesNotExist;
 use Yunhan\Rbac\Utils\Helper;
 
 /**
@@ -74,16 +76,16 @@ class Menu extends Model implements MenuContract
 
         //超级管理员获取所有权限
         // @phan-suppress-next-line PhanUndeclaredProperty
-        if ($user->id === 1) {
-            $permissions = Permission::all();
+        if ($user->id == 100) {
+            $menus = Permission::all();
         } else {
-            /** @var \Illuminate\Support\Collection $permissions */
+            /** @var \Illuminate\Support\Collection $menus */
             // @phan-suppress-next-line PhanUndeclaredMethod
-            $permissions = $user->getPermissionsViaRoles();
+            $menus = $user->getMenusViaRoles();
         }
         //查找菜单,只查找可以显示的菜单
-        $menuIds = $permissions
-            ->pluck('menu_id')
+        $menuIds = $menus
+            ->pluck('id')
             ->toArray();
         $select = ['id', 'name', 'path', 'icon', 'parent_id', 'sort'];
         return static::getMenuTreebyInId($menuIds, $select);
@@ -180,6 +182,7 @@ class Menu extends Model implements MenuContract
                         'id' => $v['id'],
                         'key' => $v['id'],
                         'name' => $v['name'],
+                        'title' => $v['name'],
                         'path' => $v['path'],
                         'icon' => $v['icon'],
                         'sort' => $v['sort'],
@@ -208,12 +211,24 @@ class Menu extends Model implements MenuContract
     }
 
     /**
+     * A menu can be applied to roles.
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            config('permission.models.role'),
+            config('permission.table_names.role_has_menus')
+        );
+    }
+
+
+    /**
      * 获取格式化菜单列表
      * @return \Illuminate\Support\Collection
      */
     public function formatList($showHidden = 0)
     {
-        $data = static::select(['id', 'id as key', 'name', 'path', 'icon',
+        $data = static::select(['id', 'name', 'path', 'icon',
             'parent_id', 'created_at', 'updated_at', 'sort'])
             //判断是否显示隐藏菜单
             ->when($showHidden == 0, function ($query) {
@@ -304,5 +319,18 @@ class Menu extends Model implements MenuContract
             throw new \Exception('该目录下有子菜单，请先删除子菜单');
         }
         return static::destroy($id);
+    }
+
+    public static function findById(int $id, $guardName = null): MenuContract
+    {
+        $guardName = $guardName ?? Guard::getDefaultName(static::class);
+
+        $role = static::where('id', $id)->where('guard_name', $guardName)->first();
+
+        if (!$role) {
+            throw MenuDoesNotExist::withId($id);
+        }
+
+        return $role;
     }
 }

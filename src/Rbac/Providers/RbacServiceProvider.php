@@ -19,6 +19,9 @@ class RbacServiceProvider extends ServiceProvider
     {
         //注册依赖
         $this->app->register(\Spatie\Permission\PermissionServiceProvider::class);
+
+        //加载配置文件
+        $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
     }
 
     public function boot()
