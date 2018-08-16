@@ -65,7 +65,7 @@ trait AssignRole
             //查找角色
             $roles = Role::whereIn('id', $roleIds)->get();
             //添加角色
-            $this->assignRole($roles);
+            $this->syncRoles($roles);
         }
     }
 
