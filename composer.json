@@ -36,8 +36,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Yunhan\\Tests\\": "tests",
-            "Yunhan\\Rbac\\Tests\\": "src/Rbac/tests"
+            "Yunhan\\Tests\\": "tests"
         }
     },
     "config": {

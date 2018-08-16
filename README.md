@@ -16,7 +16,6 @@
         - isDevOrTest: 判断是否 `dev` `local` `test`
         - isProd: 判断是否 `production` `staging`
         - isStaging: 判断是否 `staging`
-- [RBAC](src/Rbac/README.md)
 
 ## 集成模块
 - guzzlehttp/guzzle：用于发起外部请求
