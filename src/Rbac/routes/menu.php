@@ -16,6 +16,4 @@ $router->group(['prefix' => 'menu'], function (Router $router) {
     $router->post('edit', 'MenuController@edit');
     //删除菜单
     $router->post('delete', 'MenuController@destory');
-    //根据角色获取菜单列表
-    $router->get('menuList', 'MenuController@menuList');
 });

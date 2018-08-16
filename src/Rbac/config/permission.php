@@ -100,14 +100,6 @@ return [
     //数据库设置
     'connection' => 'mysql',
 
-    //不需要验证权限的名单
-    'white_list' => [
-        //guard
-        'admin' => [
-
-        ],
-    ],
-
     //数据输出
     'output' => \Yunhan\Rbac\Utils\OutPutDataFormat::class,
 
