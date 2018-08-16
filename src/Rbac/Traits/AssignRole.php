@@ -58,14 +58,14 @@ trait AssignRole
      * @param array $roleIds
      * @param Authorizable $user
      */
-    public function assignRoleToUser(array $roleIds, Authorizable $user)
+    public function assignRoleToUser(array $roleIds)
     {
         $roleIds = array_filter($roleIds);
         if ($roleIds) {
             //查找角色
             $roles = Role::whereIn('id', $roleIds)->get();
             //添加角色
-            $user->assignRole($roles);
+            $this->syncRoles($roles);
         }
     }
 
@@ -73,10 +73,10 @@ trait AssignRole
      * 清除用户所有角色
      * @param Authorizable $user
      */
-    public function removeAllRoles(Authorizable $user)
+    public function removeAllRoles()
     {
-        foreach ($user->roles as $role) {
-            $user->removeRole($role);
+        foreach ($this->roles as $role) {
+            $this->removeRole($role);
         }
     }
 
@@ -102,6 +102,11 @@ trait AssignRole
         $rolesIds = $this->roles
             ->pluck('id')
             ->toArray();
+
+        //管理员 id=1不验证
+        if ($this->id == 1) {
+            return true;
+        }
 
         //查看是否拥有超级权限(roleId为1)
         if (in_array(config('permission.super_admin'), $rolesIds, true)) {

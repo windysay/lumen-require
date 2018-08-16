@@ -77,6 +77,18 @@ class CreatePermissionTables extends Migration
             app('cache')->forget('spatie.permission.cache');
         });
 
+        $schema->create($tableNames['menus'], function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->default(0)->comment('父Id');
+            $table->string('name')->default('菜单名称');
+            $table->tinyInteger('is_show')->default(1)->comment('是否显示菜单 1显示 0不显示 默认显示');
+            $table->string('guard_name')->comment('守卫,区分模块.比如:前端(web),后端(admin)');
+            $table->string('path')->default('')->comment('前端扩展用,可以写菜单对应的前端的路由');
+            $table->string('icon')->default('')->comment('图标');
+            $table->integer('sort')->default(0);
+            $table->timestamps();
+        });
+
         $schema->create($tableNames['role_has_menus'], function (Blueprint $table) use ($tableNames) {
             $table->unsignedInteger('menu_id');
             $table->unsignedInteger('role_id');
@@ -94,18 +106,6 @@ class CreatePermissionTables extends Migration
             $table->primary(['menu_id', 'role_id']);
 
             app('cache')->forget('spatie.permission.cache');
-        });
-
-        $schema->create($tableNames['menus'], function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parent_id')->default(0)->comment('父Id');
-            $table->string('name')->default('菜单名称');
-            $table->tinyInteger('is_show')->default(1)->comment('是否显示菜单 1显示 0不显示 默认显示');
-            $table->string('guard_name')->comment('守卫,区分模块.比如:前端(web),后端(admin)');
-            $table->string('path')->default('')->comment('前端扩展用,可以写菜单对应的前端的路由');
-            $table->string('icon')->default('')->comment('图标');
-            $table->integer('sort')->default(0);
-            $table->timestamps();
         });
 
         //默认插入一个角色拥有所有权限
@@ -139,12 +139,12 @@ class CreatePermissionTables extends Migration
 
         $schema = Schema::connection(config('permission.connection'));
 
-        $schema->drop($tableNames['role_has_permissions']);
-        $schema->drop($tableNames['model_has_roles']);
-        $schema->drop($tableNames['model_has_permissions']);
-        $schema->drop($tableNames['roles']);
-        $schema->drop($tableNames['permissions']);
-        $schema->drop($tableNames['menus']);
-        $schema->drop($tableNames['role_has_menus']);
+        $schema->dropIfExists($tableNames['role_has_permissions']);
+        $schema->dropIfExists($tableNames['model_has_roles']);
+        $schema->dropIfExists($tableNames['model_has_permissions']);
+        $schema->dropIfExists($tableNames['role_has_menus']);
+        $schema->dropIfExists($tableNames['roles']);
+        $schema->dropIfExists($tableNames['permissions']);
+        $schema->dropIfExists($tableNames['menus']);
     }
 }

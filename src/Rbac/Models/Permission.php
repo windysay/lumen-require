@@ -233,19 +233,11 @@ class Permission extends BasePermission
 
     /**
      * 通过Id获取权限列表
-     * @param array $ids
+     * @param array $menuIds
      * @return array
      */
-    public function listByInIds(array $ids)
+    public function listByInIds(array $menuIds)
     {
-        $lists = static::select(['menu_id'])
-            ->whereIn('id', $ids)
-            ->get()
-            ->pluck('menu_id')
-            ->toArray();
-
-        $menuIds = array_unique($lists);
-
         return $this->getPermissionWithMenu($menuIds);
     }
 
