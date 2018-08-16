@@ -68,6 +68,17 @@ class RbacServiceProvider extends ServiceProvider
                     //用户权限组
                     require $path . 'role.php';
                 });
+
+                //不需要权限认证,去掉RBAC
+                $key = array_search('RBAC', $params['middleware']);
+                if ($key !== false) {
+                    unset($params['middleware'][$key]);
+                }
+                $this->app['router']->group($params, function (Router $router) {
+                    $path = __DIR__ . '/../routes/';
+                    //根据角色获取菜单列表
+                    $router->get('menu/menuList', 'MenuController@menuList');
+                });
             }
 
         }
