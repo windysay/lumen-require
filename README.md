@@ -16,6 +16,11 @@
         - isDevOrTest: 判断是否 `dev` `local` `test`
         - isProd: 判断是否 `production` `staging`
         - isStaging: 判断是否 `staging`
+        - load: 加载环境变量，替换 `.env`，提升性能
+
+## 优化
+- 使用 `php` 替换 `.env`，提升性能
+- 去掉无用 `PaginationServiceProvider::boot` 执行
 
 ## 集成模块
 - guzzlehttp/guzzle：用于发起外部请求

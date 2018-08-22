@@ -35,6 +35,24 @@ class Env
     }
 
     /**
+     * 加载环境变量
+     * @param string $baseDir 根目录地址
+     */
+    public static function load($baseDir)
+    {
+        $env = require $baseDir . '/../env.php';
+        foreach ($env as $name => $value) {
+            $current = getenv($name);
+            if ($current === false) {
+                putenv("$name=$value");
+
+                $_ENV[$name] = $value;
+                $_SERVER[$name] = $value;
+            }
+        }
+    }
+
+    /**
      * 内部封装方法
      * @param string       $name
      * @param array|string $env
