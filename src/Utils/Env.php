@@ -45,7 +45,7 @@ class Env
      */
     public static function load($basePath)
     {
-        $env = require $basePath . '/../env.php';
+        $env = require $basePath . 'env.php';
         foreach ($env as $name => $value) {
             putenv("$name=$value");
         }
