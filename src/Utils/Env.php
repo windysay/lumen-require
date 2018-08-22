@@ -36,11 +36,11 @@ class Env
 
     /**
      * 加载环境变量
-     * @param string $baseDir 根目录地址
+     * @param string $basePath 根目录
      */
-    public static function load($baseDir)
+    public static function load($basePath)
     {
-        $env = require $baseDir . '/../env.php';
+        $env = require $basePath . '/../env.php';
         foreach ($env as $name => $value) {
             $current = getenv($name);
             if ($current === false) {
