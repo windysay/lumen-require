@@ -26,12 +26,17 @@ class Env
 
     public static function isProd()
     {
-        return self::checkEnv(__FUNCTION__, ['production', 'staging']);
+        return self::checkEnv(__FUNCTION__, ['production', 'pre', 'staging']);
     }
 
     public static function isStaging()
     {
         return self::checkEnv(__FUNCTION__, ['staging']);
+    }
+
+    public static function isPre()
+    {
+        return self::checkEnv(__FUNCTION__, ['pre']);
     }
 
     /**
