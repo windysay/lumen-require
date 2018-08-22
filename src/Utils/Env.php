@@ -42,13 +42,7 @@ class Env
     {
         $env = require $basePath . '/../env.php';
         foreach ($env as $name => $value) {
-            $current = getenv($name);
-            if ($current === false) {
-                putenv("$name=$value");
-
-                $_ENV[$name] = $value;
-                $_SERVER[$name] = $value;
-            }
+            putenv("$name=$value");
         }
     }
 
