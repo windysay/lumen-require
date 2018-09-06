@@ -42,11 +42,15 @@ class Env
     /**
      * 加载环境变量
      * @param string $basePath 根目录
+     * @throws \Exception
      */
     public static function load($basePath)
     {
         $env = require $basePath . 'env.php';
         foreach ($env as $name => $value) {
+            if (!is_string($value)) {
+                throw new \Exception('env value must be string: ' . $name);
+            }
             putenv("$name=$value");
         }
     }
