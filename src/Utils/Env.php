@@ -46,7 +46,11 @@ class Env
      */
     public static function load($basePath)
     {
-        $env = require $basePath . 'env.php';
+        $file = $basePath . 'env.php';
+        if (!file_exists($file)) {
+            throw new \Exception('env file not exist');
+        }
+        $env = require $file;
         foreach ($env as $name => $value) {
             if (!is_string($value)) {
                 throw new \Exception('env value must be string: ' . $name);
