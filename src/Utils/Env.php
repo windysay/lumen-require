@@ -26,7 +26,7 @@ class Env
 
     public static function isProd()
     {
-        return self::checkEnv(__FUNCTION__, ['production', 'pre', 'staging']);
+        return self::checkEnv(__FUNCTION__, ['production', 'prod', 'pre', 'staging']);
     }
 
     public static function isStaging()

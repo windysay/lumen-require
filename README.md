@@ -14,7 +14,7 @@
         - isDev: 判断是否 `dev` `local`
         - isTest: 判断是否 `test`
         - isDevOrTest: 判断是否 `dev` `local` `test`
-        - isProd: 判断是否 `production` `pre` `staging`
+        - isProd: 判断是否 `production` `prod` `pre` `staging`
         - isStaging: 判断是否 `staging`
         - isPre: 判断是否 `pre`
         - load: 加载环境变量，替换 `.env`，提升性能
