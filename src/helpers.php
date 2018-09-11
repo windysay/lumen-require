@@ -123,30 +123,3 @@ if (!function_exists('resolve')) {
         return app($name);
     }
 }
-
-if (!function_exists('curlPost')) {
-    /**
-     * @param string $url
-     * @param array $params
-     * @return bool|string
-     */
-    function curlPost($url, $params)
-    {
-        $client = new \GuzzleHttp\Client();
-        $options = [
-            'form_params' => $params,
-        ];
-        if (strpos($url, 'https://') === 0) {
-            $options['verify'] = false;
-        }
-        try {
-            $res = $client->post($url, $options);
-        } catch (\Exception $e) {
-            return false;
-        }
-        if ($res->getStatusCode() != 200) {
-            return false;
-        }
-        return (string)$res->getBody();
-    }
-}

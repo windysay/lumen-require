@@ -31,5 +31,23 @@ interface Config
      * @param array $params
      * @return string
      */
-    public function getSign($params): string;
+    public function getSign(&$params): string;
+
+    /**
+     * 返回数据格式:
+     *  [
+     *      [
+     *          'name'=>'',
+     *           'icon'=>'',
+     *           'path'=>'',
+     *           'sort'=>'',
+     *           'pid' =>'',
+     *           'id' => '',
+     *       ],
+     *  ]
+     * 根据模块获取菜单列表
+     * @param $guard
+     * @return array
+     */
+    public function getMenuList($guard): array;
 }

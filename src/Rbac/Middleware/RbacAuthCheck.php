@@ -5,6 +5,7 @@ namespace Yunhan\Rbac\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Yunhan\Rbac\Contracts\Config;
+use Yunhan\Rbac\Utils\RbacHelper;
 
 class RbacAuthCheck
 {
@@ -26,15 +27,16 @@ class RbacAuthCheck
         /** @var Config $config */
         $config = app(Config::class);
         $params = [
+            'guard' => config('auth.defaults.guard'),
             'route' => $route,
             'uid' => $config->getUserId(),
             'app_key' => $config->getAppKey(),
         ];
-        $params['ticket'] = $config->getSign($params);
+        $params['sign'] = $config->getSign($params);
         $url = rtrim($config->getDomain(), '/') . $this->action;
 
-        $result = curlPost($url, $params);
-        if ($result['code'] === 18000) {
+        $result = RbacHelper::curlPost($url, $params);
+        if (isset($result['code']) && $result['code'] === 18000) {
             return $next($request);
         }
 

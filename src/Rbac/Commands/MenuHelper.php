@@ -2,9 +2,9 @@
 
 namespace Yunhan\Rbac\Commands;
 
-use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Yunhan\Rbac\Contracts\Config;
+use Yunhan\Rbac\Utils\RbacHelper;
 
 class MenuHelper extends Command
 {
@@ -25,7 +25,7 @@ class MenuHelper extends Command
      * @var string
      */
     protected $signature = 'rbac-menu:generate 
-                                {module : 同步的模块.对应中间件加的gurade:例如`"middleware" => "auth:admin,1"`模块为`admin`}';
+                                {module : 同步的模块.对应中间件加的gurade:例如`"middleware" => "setGuard:admin"`模块为`admin`}';
 
     /**
      * 控制台命令描述
@@ -48,17 +48,11 @@ class MenuHelper extends Command
      */
     public function handle()
     {
-        if (env('RBAC_MENU_PATH')) {
-            $this->menuPath = env('RBAC_MENU_PATH');
-        } else {
-            $this->menuPath = storage_path('menus/menus.php');
-        }
-
+        $this->module = $this->argument('module');
+        $this->menuPath = storage_path("menus/{$this->module}.php");
         if (!file_exists($this->menuPath)) {
             throw new \Exception('菜单文件不存在');
         }
-
-        $this->module = $this->argument('module');
 
         $menus = $this->getMenus();
         $routes = $this->getRoutes();
@@ -75,18 +69,19 @@ class MenuHelper extends Command
                 'update' => [],
             ],
             'app_key' => $config->getAppKey(),
+            'guard' => $this->module,
         ];
 
-        $data['ticket'] = $config->getSign($data);
+        $data['sign'] = $config->getSign($data);
         $url = rtrim($config->getDomain(), '/') . $this->action;
 
-        $result = curlPost($url, $data);
+        $result = RbacHelper::curlPost($url, $data);
 
-        if ($result['code'] == 18000) {
-            return 'success';
+        if (isset($result['code']) && $result['code'] == 18000) {
+            echo 'success';
         }
 
-        return $result['msg'];
+        echo $result['msg'];
 
     }
 
@@ -151,7 +146,7 @@ class MenuHelper extends Command
                 if (isset($menu['children']) && is_array($menu['children'])) {
                     $this->parentPath = $this->combinePath($menu['path']);
                     $this->combineMenuAction($menu['children'], $routes);
-                    $this->replacePaht($menu['path']);
+                    $this->replacePath($menu['path']);
                 } else {
                     $path = $this->combinePath($menu['path']);
                     if (array_key_exists($path, $routes)) {
@@ -177,37 +172,12 @@ class MenuHelper extends Command
     /**
      * @param string $path
      */
-    protected function replacePaht($path)
+    protected function replacePath($path)
     {
         if (strpos($this->parentPath, '.' . $path) !== false) {
             $this->parentPath = str_replace('.' . $path, '', $this->parentPath);
         } else {
             $this->parentPath = str_replace($path, '', $this->parentPath);
         }
-    }
-
-    /**
-     * @param string $url
-     * @param array $params
-     * @return bool|string
-     */
-    public function post($url, $params)
-    {
-        $client = new Client();
-        $options = [
-            'form_params' => $params,
-        ];
-        if (strpos($url, 'https://') === 0) {
-            $options['verify'] = false;
-        }
-        try {
-            $res = $client->post($url, $options);
-        } catch (\Exception $e) {
-            return false;
-        }
-        if ($res->getStatusCode() != 200) {
-            return false;
-        }
-        return (string)$res->getBody();
     }
 }
