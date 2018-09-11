@@ -29,7 +29,7 @@ if (!function_exists('asset')) {
     /**
      * Generate an asset path for the application.
      * @param  string $path
-     * @param  bool   $secure
+     * @param  bool $secure
      * @return string
      */
     function asset($path, $secure = null)
@@ -78,7 +78,7 @@ if (!function_exists('request')) {
     /**
      * Get an instance of the current request or an input item from the request.
      * @param  array|string $key
-     * @param  mixed        $default
+     * @param  mixed $default
      * @return \Illuminate\Http\Request|string|array
      */
     function request($key = null, $default = null)
@@ -99,7 +99,7 @@ if (!function_exists('logger')) {
     /**
      * Log a debug message to the logs.
      * @param  string $message
-     * @param  array  $context
+     * @param  array $context
      * @return \Illuminate\Log\LogManager|null
      */
     function logger($message = null, array $context = [])
